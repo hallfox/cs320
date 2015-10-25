@@ -1,0 +1,6 @@
+# Branch predicitors
+
+To use:
+
+    make
+    ./predictors [input trace] [output file]
