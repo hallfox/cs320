@@ -94,6 +94,50 @@ std::string bimodal_predicitor_2(const std::vector<Prediction>& preds) {
     return ss.str();
 }
 
+
+std::string gshare_predicitor(const std::vector<Prediction>& preds) {
+    std::ostringstream ss;
+    // 0000 0000 0000 0111 -> 00 07 
+    // 0000 0111 1111 1111 -> 07 FF 
+    for (unsigned short r_mask = 0x7; r_mask <= 0x7FF; r_mask = (r_mask << 1) | 1) {
+        std::vector<unsigned char> table(2048, 3);
+        unsigned short greg = 0; // Greg will keep track of things for me
+        int correct_preds = 0;
+        for (auto pred = preds.begin(); pred != preds.end(); pred++) {
+            int predLoc = (pred->pc ^ greg) % 2048;
+            if (pred->taken == table[predLoc] > 1) {
+                correct_preds++;
+                if (table[predLoc] == 2) {
+                    table[predLoc] = 3;
+                }
+                else if (table[predLoc] == 1) {
+                    table[predLoc] = 0;
+                }
+            }
+            else if (table[predLoc] == 0 || table[predLoc] == 2) {
+                table[predLoc] = 1;
+            }
+            else if (table[predLoc] == 1 || table[predLoc] == 3) {
+                table[predLoc] = 2;
+            }
+            else {
+                std::cout << "invalid state for bimodal predictor: " << table[predLoc]
+                    << std::endl;
+                exit(EXIT_FAILURE);
+            }
+            greg = (greg << 1 | pred->taken) & r_mask; 
+        }
+        ss << correct_preds << "," << preds.size() << ";";
+        if (r_mask == 0x7FF) {
+            ss << "\n";
+        }
+        else {
+            ss << " ";
+        }
+    }
+    return ss.str();
+}
+
 int main(int argc, char *argv[]) {
     if (argc != 3) {
         std::cout << "Invalid command format: ./predictors [input trace] [output file]\n";
@@ -119,6 +163,7 @@ int main(int argc, char *argv[]) {
     output << no_predicitor(preds) << "\n";
     output << bimodal_predicitor_1(preds) << "\n";
     output << bimodal_predicitor_2(preds) << "\n";
+    output << gshare_predicitor(preds) << "\n";
 
     output.close();
 }
