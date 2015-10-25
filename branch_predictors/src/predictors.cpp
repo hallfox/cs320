@@ -20,8 +20,78 @@ std::string no_predicitor(const std::vector<Prediction>& preds) {
     return std::to_string(taken) + "," + std::to_string(preds.size()) + ";";
 }
 
-std::string bimodal_predicitor_1(const std::vector<Prediction>&) {
-    return "";
+std::string bimodal_predicitor_1(const std::vector<Prediction>& preds) {
+    int table_sizes[] = {16, 32, 128, 256, 512, 1024, 2048};
+    std::ostringstream ss;
+    for (int i = 0; i < 7; i++) {
+        // Table for 1-bit predictor 
+        int size = table_sizes[i];
+        std::vector<bool> table(size, true);
+        int correct_preds = 0;
+        for (auto pred = preds.begin(); pred != preds.end(); pred++) {
+            int predLoc = pred->pc % size;
+            if (pred->taken == table[predLoc]) {
+                correct_preds++;
+            }
+            else {
+                table[predLoc] = !table[predLoc];
+            }
+        }
+        ss << correct_preds << "," << preds.size() << ";";
+        if (i == 7) {
+            ss << "\n";
+        }
+        else {
+            ss << " ";
+        }
+    }
+    return ss.str();
+}
+
+std::string bimodal_predicitor_2(const std::vector<Prediction>& preds) {
+    int table_sizes[] = {16, 32, 128, 256, 512, 1024, 2048};
+    std::ostringstream ss;
+    for (int i = 0; i < 7; i++) {
+        // Table for 2-bit predictor 
+        // 0 -> NN
+        // 1 -> N
+        // 2 -> T
+        // 3 -> TT
+        int size = table_sizes[i];
+        std::vector<unsigned char> table(size, 3);
+        int correct_preds = 0;
+        for (auto pred = preds.begin(); pred != preds.end(); pred++) {
+            int predLoc = pred->pc % size;
+            if (pred->taken == table[predLoc] > 1) {
+                correct_preds++;
+                if (table[predLoc] == 2) {
+                    table[predLoc] = 3;
+                }
+                else if (table[predLoc] == 1) {
+                    table[predLoc] = 0;
+                }
+            }
+            else if (table[predLoc] == 0 || table[predLoc] == 2) {
+                table[predLoc] = 1;
+            }
+            else if (table[predLoc] == 1 || table[predLoc] == 3) {
+                table[predLoc] = 2;
+            }
+            else {
+                std::cout << "invalid state for bimodal predictor: " << table[predLoc]
+                    << std::endl;
+                exit(EXIT_FAILURE);
+            }
+        }
+        ss << correct_preds << "," << preds.size() << ";";
+        if (i == 7) {
+            ss << "\n";
+        }
+        else {
+            ss << " ";
+        }
+    }
+    return ss.str();
 }
 
 int main(int argc, char *argv[]) {
@@ -47,6 +117,8 @@ int main(int argc, char *argv[]) {
 
     output << yes_predicitor(preds) << "\n";
     output << no_predicitor(preds) << "\n";
+    output << bimodal_predicitor_1(preds) << "\n";
+    output << bimodal_predicitor_2(preds) << "\n";
 
     output.close();
 }
