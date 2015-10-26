@@ -29,19 +29,16 @@ std::string bimodal_predicitor_1(const std::vector<Prediction>& preds) {
         std::vector<bool> table(size, true);
         int correct_preds = 0;
         for (auto pred = preds.begin(); pred != preds.end(); pred++) {
-            int predLoc = pred->pc % size;
-            if (pred->taken == table[predLoc]) {
+            int pred_loc = pred->pc % size;
+            if (pred->taken == table[pred_loc]) {
                 correct_preds++;
             }
             else {
-                table[predLoc] = !table[predLoc];
+                table[pred_loc] = !table[pred_loc];
             }
         }
         ss << correct_preds << "," << preds.size() << ";";
-        if (i == 7) {
-            ss << "\n";
-        }
-        else {
+        if (i != 7) {
             ss << " ";
         }
     }
@@ -61,33 +58,30 @@ std::string bimodal_predicitor_2(const std::vector<Prediction>& preds) {
         std::vector<unsigned char> table(size, 3);
         int correct_preds = 0;
         for (auto pred = preds.begin(); pred != preds.end(); pred++) {
-            int predLoc = pred->pc % size;
-            if (pred->taken == table[predLoc] > 1) {
+            int pred_loc = pred->pc % size;
+            if (pred->taken == table[pred_loc] > 1) {
                 correct_preds++;
-                if (table[predLoc] == 2) {
-                    table[predLoc] = 3;
+                if (table[pred_loc] == 2) {
+                    table[pred_loc] = 3;
                 }
-                else if (table[predLoc] == 1) {
-                    table[predLoc] = 0;
+                else if (table[pred_loc] == 1) {
+                    table[pred_loc] = 0;
                 }
             }
-            else if (table[predLoc] == 0 || table[predLoc] == 2) {
-                table[predLoc] = 1;
+            else if (table[pred_loc] == 0 || table[pred_loc] == 2) {
+                table[pred_loc] = 1;
             }
-            else if (table[predLoc] == 1 || table[predLoc] == 3) {
-                table[predLoc] = 2;
+            else if (table[pred_loc] == 1 || table[pred_loc] == 3) {
+                table[pred_loc] = 2;
             }
             else {
-                std::cout << "invalid state for bimodal predictor: " << table[predLoc]
+                std::cout << "invalid state for bimodal predictor: " << table[pred_loc]
                     << std::endl;
                 exit(EXIT_FAILURE);
             }
         }
         ss << correct_preds << "," << preds.size() << ";";
-        if (i == 7) {
-            ss << "\n";
-        }
-        else {
+        if (i != 7) {
             ss << " ";
         }
     }
@@ -104,37 +98,94 @@ std::string gshare_predicitor(const std::vector<Prediction>& preds) {
         unsigned short greg = 0; // Greg will keep track of things for me
         int correct_preds = 0;
         for (auto pred = preds.begin(); pred != preds.end(); pred++) {
-            int predLoc = (pred->pc ^ greg) % 2048;
-            if (pred->taken == table[predLoc] > 1) {
+            int pred_loc = (pred->pc ^ greg) % 2048;
+            if (pred->taken == table[pred_loc] > 1) {
                 correct_preds++;
-                if (table[predLoc] == 2) {
-                    table[predLoc] = 3;
+                if (table[pred_loc] == 2) {
+                    table[pred_loc] = 3;
                 }
-                else if (table[predLoc] == 1) {
-                    table[predLoc] = 0;
+                else if (table[pred_loc] == 1) {
+                    table[pred_loc] = 0;
                 }
             }
-            else if (table[predLoc] == 0 || table[predLoc] == 2) {
-                table[predLoc] = 1;
+            else if (table[pred_loc] == 0 || table[pred_loc] == 2) {
+                table[pred_loc] = 1;
             }
-            else if (table[predLoc] == 1 || table[predLoc] == 3) {
-                table[predLoc] = 2;
+            else if (table[pred_loc] == 1 || table[pred_loc] == 3) {
+                table[pred_loc] = 2;
             }
             else {
-                std::cout << "invalid state for bimodal predictor: " << table[predLoc]
+                std::cout << "invalid state for bimodal predictor: " << table[pred_loc]
                     << std::endl;
                 exit(EXIT_FAILURE);
             }
             greg = (greg << 1 | pred->taken) & r_mask; 
         }
         ss << correct_preds << "," << preds.size() << ";";
-        if (r_mask == 0x7FF) {
-            ss << "\n";
-        }
-        else {
+        if (r_mask != 0x7FF) {
             ss << " ";
         }
     }
+    return ss.str();
+}
+
+std::string tournament_predicitor(const std::vector<Prediction>& preds) {
+    std::ostringstream ss;
+    unsigned short greg = 0; // Greg will keep track of things for me
+    std::vector<unsigned char> gshare_table(2048, 3);
+    std::vector<unsigned char> bimodal_table(2048, 3);
+    std::vector<unsigned char> selector_table(2048, 0);
+    int correct_preds = 0;
+    for (auto pred = preds.begin(); pred != preds.end(); pred++) {
+        int gshare_pred_loc = (pred->pc ^ greg) % 2048;
+        int bimodal_pred_loc = pred->pc % 2048;
+
+        // Select a predictor
+        unsigned char &gshare_guess = gshare_table[gshare_pred_loc],
+                      &bimodal_guess = bimodal_table[bimodal_pred_loc],
+                      &predictor = selector_table[bimodal_pred_loc];
+        if (predictor < 2) {
+            // Use gshare
+            if (pred->taken == gshare_guess > 1) {
+                correct_preds++;
+                // Update selector table if bimodal was wrong
+                predictor = pred->taken == bimodal_guess > 1 ? predictor : 0;
+            }
+            else if (pred->taken == bimodal_guess > 1) {
+                predictor++;
+            }
+        }
+        else {
+            // Use bimodal
+            if (pred->taken == bimodal_guess > 1) {
+                correct_preds++;
+                // Update selector table if gshare was wrong
+                predictor = pred->taken == gshare_guess > 1 ? predictor : 3;
+            }
+            else if (pred->taken == gshare_guess > 1) {
+                predictor--;
+            }
+        }
+
+        // Update predictors
+        // Gshare
+        if (pred->taken == gshare_guess > 1) {
+            gshare_guess = gshare_guess > 1 ? 3 : 0;
+        }
+        else {
+            gshare_guess = gshare_guess == 0 || gshare_guess == 2 ? 1 : 2;
+        }
+        // Bimodal
+        if (pred->taken == bimodal_guess > 1) {
+            bimodal_guess = bimodal_guess > 1 ? 3 : 0;
+        }
+        else {
+            bimodal_guess = bimodal_guess == 0 || bimodal_guess == 2 ? 1 : 2;
+        }
+        
+        greg = (greg << 1 | pred->taken) & 0x7FF; 
+    }
+    ss << correct_preds << "," << preds.size() << ";";
     return ss.str();
 }
 
@@ -164,6 +215,9 @@ int main(int argc, char *argv[]) {
     output << bimodal_predicitor_1(preds) << "\n";
     output << bimodal_predicitor_2(preds) << "\n";
     output << gshare_predicitor(preds) << "\n";
+    output << tournament_predicitor(preds) << "\n";
 
     output.close();
+
+    return 0;
 }
