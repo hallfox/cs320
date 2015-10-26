@@ -38,7 +38,7 @@ std::string bimodal_predicitor_1(const std::vector<Prediction>& preds) {
             }
         }
         ss << correct_preds << "," << preds.size() << ";";
-        if (i != 7) {
+        if (i != 6) {
             ss << " ";
         }
     }
@@ -81,7 +81,7 @@ std::string bimodal_predicitor_2(const std::vector<Prediction>& preds) {
             }
         }
         ss << correct_preds << "," << preds.size() << ";";
-        if (i != 7) {
+        if (i != 6) {
             ss << " ";
         }
     }
