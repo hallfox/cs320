@@ -24,7 +24,7 @@ std::string bimodal_predicitor_1(const std::vector<Prediction>& preds) {
     int table_sizes[] = {16, 32, 128, 256, 512, 1024, 2048};
     std::ostringstream ss;
     for (int i = 0; i < 7; i++) {
-        // Table for 1-bit predictor 
+        // Table for 1-bit predictor
         int size = table_sizes[i];
         std::vector<bool> table(size, true);
         int correct_preds = 0;
@@ -49,7 +49,7 @@ std::string bimodal_predicitor_2(const std::vector<Prediction>& preds) {
     int table_sizes[] = {16, 32, 128, 256, 512, 1024, 2048};
     std::ostringstream ss;
     for (int i = 0; i < 7; i++) {
-        // Table for 2-bit predictor 
+        // Table for 2-bit predictor
         // 0 -> NN
         // 1 -> N
         // 2 -> T
@@ -91,8 +91,8 @@ std::string bimodal_predicitor_2(const std::vector<Prediction>& preds) {
 
 std::string gshare_predicitor(const std::vector<Prediction>& preds) {
     std::ostringstream ss;
-    // 0000 0000 0000 0111 -> 00 07 
-    // 0000 0111 1111 1111 -> 07 FF 
+    // 0000 0000 0000 0111 -> 00 07
+    // 0000 0111 1111 1111 -> 07 FF
     for (unsigned short r_mask = 0x7; r_mask <= 0x7FF; r_mask = (r_mask << 1) | 1) {
         std::vector<unsigned char> table(2048, 3);
         unsigned short greg = 0; // Greg will keep track of things for me
@@ -119,7 +119,7 @@ std::string gshare_predicitor(const std::vector<Prediction>& preds) {
                     << std::endl;
                 exit(EXIT_FAILURE);
             }
-            greg = (greg << 1 | pred->taken) & r_mask; 
+            greg = (greg << 1 | pred->taken) & r_mask;
         }
         ss << correct_preds << "," << preds.size() << ";";
         if (r_mask != 0x7FF) {
@@ -182,8 +182,8 @@ std::string tournament_predicitor(const std::vector<Prediction>& preds) {
         else {
             bimodal_guess = bimodal_guess == 0 || bimodal_guess == 2 ? 1 : 2;
         }
-        
-        greg = (greg << 1 | pred->taken) & 0x7FF; 
+
+        greg = (greg << 1 | pred->taken) & 0x7FF;
     }
     ss << correct_preds << "," << preds.size() << ";";
     return ss.str();

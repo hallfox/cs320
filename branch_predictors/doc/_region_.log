@@ -1,0 +1,269 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=prv_report 2015.10.30)  30 OCT 2015 14:50
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**&prv_report _region_.tex
+(./_region_.tex
+LaTeX2e <2015/01/01> patch level 2
+Babel <3.9m> and hyphenation patterns for 79 languages loaded.
+CUSTOMISED FORMAT. Preloaded files:
+        .
+ article.cls    2014/09/29 v1.4h Standard LaTeX document class
+  size12.clo    2014/09/29 v1.4h Standard LaTeX file (size option)
+geometry.sty    2010/09/12 v5.6 Page Geometry
+  keyval.sty    2014/10/28 v1.15 key=value parser (DPC)
+   ifpdf.sty    2011/01/30 v2.3 Provides the ifpdf switch (HO)
+  ifvtex.sty    2010/03/01 v1.5 Detect VTeX and its facilities (HO)
+ ifxetex.sty    2010/09/12 v0.6 Provides ifxetex conditional
+ amsmath.sty    2013/01/14 v2.14 AMS math features
+ amstext.sty    2000/06/29 v2.01
+  amsgen.sty    1999/11/30 v2.0
+  amsbsy.sty    1999/11/29 v1.2d
+  amsopn.sty    1999/12/14 v2.01 operator names
+  amsthm.sty    2015/03/04 v2.20.2
+ amssymb.sty    2013/01/14 v3.01 AMS font symbols
+amsfonts.sty    2013/01/14 v3.01 Basic AMSFonts support
+enumerate.sty    2014/10/28 v3.00 enumerate extensions (DPC)
+    umsa.fd    2013/01/14 v3.01 AMS symbols A
+    umsb.fd    2013/01/14 v3.01 AMS symbols B
+        .
+No file _region_.aux.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+(/home/taylor/.emacs.d/elpa/auctex-11.88.9/latex/preview.sty
+Package: preview 2010/02/14 11.88 (AUCTeX/preview-latex)
+
+(/home/taylor/.emacs.d/elpa/auctex-11.88.9/latex/prtightpage.def
+\PreviewBorder=\dimen120
+)
+(/home/taylor/.emacs.d/elpa/auctex-11.88.9/latex/prauctex.def
+No auxiliary output files.
+
+
+\hbadness=\count102
+\hfuzz=\dimen121
+(/home/taylor/.emacs.d/elpa/auctex-11.88.9/latex/prauctex.cfg))
+(/home/taylor/.emacs.d/elpa/auctex-11.88.9/latex/prfootnotes.def)
+\pr@snippet=\count103
+\pr@box=\box28
+\pr@output=\toks28
+
+Preview: Fontsize 12pt
+Preview: PDFoutput 1
+)
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: <default>
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(72.26999pt, 469.75502pt, 72.26999pt)
+* v-part:(T,H,B)=(72.26999pt, 650.43001pt, 72.26999pt)
+* \paperwidth=614.295pt
+* \paperheight=794.96999pt
+* \textwidth=469.75502pt
+* \textheight=650.43001pt
+* \oddsidemargin=0.0pt
+* \evensidemargin=0.0pt
+* \topmargin=-37.0pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=12.0pt
+* \footskip=30.0pt
+* \marginparwidth=44.0pt
+* \marginparsep=10.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.8pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+ !name(report.tex) !offset(-3) 
+! Preview: Snippet 1 started.
+<-><->
+      
+l.34 \section
+             {Purpose}
+Not a real error.
+
+Preview: Tightpage -32891 -32891 32891 32891
+! Preview: Snippet 1 ended.(776995+220200x30785865).
+<-><->
+      
+l.34 \section{Purpose}
+                      
+Not a real error.
+
+[1{/usr/local/texlive/2015/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
+
+]
+! Preview: Snippet 2 started.
+<-><->
+      
+l.38 \section
+             {Static Predictors}
+Not a real error.
+
+! Preview: Snippet 2 ended.(786431+0x30785865).
+<-><->
+      
+l.38 \section{Static Predictors}
+                                
+Not a real error.
+
+[2
+
+]
+! Preview: Snippet 3 started.
+<-><->
+      
+l.41 \subsection
+                {Always Taken}
+Not a real error.
+
+! Preview: Snippet 3 ended.(655359+183500x30785865).
+<-><->
+      
+l.41 \subsection{Always Taken}
+                              
+Not a real error.
+
+[3
+
+]
+! Preview: Snippet 4 started.
+<-><->
+      
+l.44 \subsection
+                {Always Non-Taken}
+Not a real error.
+
+! Preview: Snippet 4 ended.(655359+183500x30785865).
+<-><->
+      
+l.44 \subsection{Always Non-Taken}
+                                  
+Not a real error.
+
+[4
+
+]
+! Preview: Snippet 5 started.
+<-><->
+      
+l.47 \section
+             {Dynamic Predictors}
+Not a real error.
+
+! Preview: Snippet 5 ended.(786431+220200x30785865).
+<-><->
+      
+l.47 \section{Dynamic Predictors}
+                                 
+Not a real error.
+
+[5
+
+]
+! Preview: Snippet 6 started.
+<-><->
+      
+l.50 \subsection
+                {1-Bit Bimodal Predictor}
+Not a real error.
+
+! Preview: Snippet 6 ended.(655359+0x30785865).
+<-><->
+      
+l.50 \subsection{1-Bit Bimodal Predictor}
+                                         
+Not a real error.
+
+[6
+
+]
+! Preview: Snippet 7 started.
+<-><->
+      
+l.53 \subsection
+                {2-Bit Bimodal Predictor}
+Not a real error.
+
+! Preview: Snippet 7 ended.(655359+0x30785865).
+<-><->
+      
+l.53 \subsection{2-Bit Bimodal Predictor}
+                                         
+Not a real error.
+
+[7
+
+]
+! Preview: Snippet 8 started.
+<-><->
+      
+l.56 \subsection
+                {Gshare Predictor}
+Not a real error.
+
+! Preview: Snippet 8 ended.(655359+0x30785865).
+<-><->
+      
+l.56 \subsection{Gshare Predictor}
+                                  
+Not a real error.
+
+[8
+
+]
+! Preview: Snippet 9 started.
+<-><->
+      
+l.59 \subsection
+                {Tournament Predictor}
+Not a real error.
+
+! Preview: Snippet 9 ended.(655359+0x30785865).
+<-><->
+      
+l.59 \subsection{Tournament Predictor}
+                                      
+Not a real error.
+
+[9
+
+] ) 
+Here is how much of TeX's memory you used:
+ 189 strings out of 491329
+ 2700 string characters out of 6112841
+ 83168 words of memory out of 5000000
+ 5420 multiletter control sequences out of 15000+600000
+ 13585 words of font info for 52 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 22i,4n,24p,163b,190s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pf
+b>
+Output written on _region_.pdf (9 pages, 15660 bytes).
+PDF statistics:
+ 38 PDF objects out of 1000 (max. 8388607)
+ 25 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+

@@ -9,7 +9,7 @@ typedef struct Prediction {
     unsigned long long pc;
 
     Prediction(std::string behavior, unsigned long long pc):
-        pc(pc), taken(behavior == "T") {}
+      taken(behavior == "T"), pc(pc) {}
 } Prediction;
 
 std::string yes_predicitor(const std::vector<Prediction>&);
