@@ -1,5 +1,6 @@
 #include "cache.hpp"
 #include <cmath>
+#include <iostream>
 
 /** Set implementation **/
 
@@ -17,6 +18,10 @@ bool Set::has_block(uint addr) {
 }
 
 void LRUSet::put_block(char op, uint addr) {
+  // for (auto it = lru_order.cbegin(); it != lru_order.cend(); it++) {
+  //   std::cout << *it << ", ";
+  // }
+  // std::cout << "; ";
   int index = find_block(addr);
   if (index != -1) {
     // Hit, update LRU list
@@ -31,6 +36,10 @@ void LRUSet::put_block(char op, uint addr) {
     lru_order.push_front(deleted);
     ways[deleted] = addr;
   }
+  // for (auto it = lru_order.cbegin(); it != lru_order.cend(); it++) {
+  //   std::cout << *it << ", ";
+  // }
+  // std::cout << std::endl;
 }
 
 int HotColdSet::get_cold() {

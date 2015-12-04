@@ -49,7 +49,14 @@ int main(int argc, char *argv[]) {
     Cache(16, 8, CACHE_CONFIG_PREFETCH_MISS),
     Cache(16, 16, CACHE_CONFIG_PREFETCH_MISS),
   };
-  std::vector<Cache*> tests = { part_1, part_2, part_3, part_4, part_5, part_6 };
+  std::vector<Cache*> tests = {
+    part_1,
+    part_2,
+    part_3,
+    part_4,
+    part_5,
+    part_6,
+  };
   int test_sizes[] = {4, 4, 2, 4, 4, 4};
   while (input_trace >> op >> std::hex >> data) {
     for (int i = 0; i < 6; i++) {
@@ -63,12 +70,15 @@ int main(int argc, char *argv[]) {
 
   for (int i = 0; i < 6; i++) {
     for (int j = 0; j < test_sizes[i]; j++) {
-      std::cout << tests[i][j].get_hits() << ", " << lines << "; ";
+      output << tests[i][j].get_hits() << "," << lines << ";";
+      if (j != test_sizes[i] - 1) {
+        output << " ";
+      }
       if (i == 2 && j == 0) {
-        std::cout << "\n";
+        output << "\n";
       }
     }
-    std::cout << "\n";
+    output << "\n";
   }
 
   output.close();

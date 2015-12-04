@@ -46,7 +46,7 @@ private:
 public:
   LRUSet(int n_ways, CacheConfig conf):
     Set(n_ways, conf),
-    lru_order(std::list<int>(n_ways))
+    lru_order(std::list<int>())
   {
     for (int i = 0; i < n_ways; i++) {
       lru_order.push_front(i);
