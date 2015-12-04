@@ -59,165 +59,64 @@ CS 320}
  
 \maketitle
 \section{Purpose}
-\label{sec:label}
 
 In this assignment we look to evaluate the effectiveness of different methods of
-caching.
+caching. We'll use direct caches, set-associative caches, fully-associative
+caches, and multiple write-through policies and next-line prefetching.
  
-\section{Static Predictors}
-\label{sec:label}
+\section{Direct Caching}
 
-\subsection{Always Taken}
-\label{subsec:label}
+Direct caching is consistently the worst estimator, although it seems to pull
+ahead for the largest of cache sizes (16 KB). This is what I expected, except in
+the last case.
 
-The algorithm for the static predictors is extremely simple. Essentially we want
-the predictor to be the program's Yes Man. The entire algorithm is:
+\section{Set-Associative Caching}
 
-\begin{lstlisting}[language=C++, caption=Squirrel!, label=Always Taken]
-std::string yes_predicitor(const std::vector<Prediction>& preds) {
-    int taken = count_if(preds.begin(), preds.end(),
-            [](Prediction p){return p.taken;});
-    return std::to_string(taken) + "," + std::to_string(preds.size()) + ";";
-}
-\end{lstlisting}
+This was the most general model, with all other models of the cache being some
+derivation or special case of the Set-Associative cache's functionality. For
+small caches, this model usually performed much better than the Direct Cache
+equivalent, though it was still not the best.
 
-The function is a simplified calcuation of how many times we take the
-branch correctly. The acutal logic can be seen in the body of the lambda
-function we pass to \lstinline|count_if|, which is a neat utility function from
-\lstinline|<algorithm>|. Nothing too complex, just always predict we'll take the branch.
+\section{Fully-Associative Caching}
 
-\subsection{Always Non-Taken}
-\label{sec:label}
+While its simulated implementation was much less efficient than the set
+associative caching, fully associative caches performed better than the largetst
+way Set-Associative cache. However, the number of ways had a huge increase from
+the largest used in the Set-Associate model, and resulted in just a tiny
+return in hit counts. Taken into account for the loss in efficiency associated
+with scanning the entire cache for a block, this model isn't necessarily the
+best option.
 
-This algorithm differs trivially from the Always Taken strategy above. Instead
-we always say no, and the only difference in the code above is that we
-\lstinline|return !p.taken;| instead, and we get the exact opposite results.
+\subsection{Hot-Cold Replacement}
 
-In general, the results we get from the two methods are highly varied. Since the
-results of the two are inversely related, if one performs well the other one
-divebombs, making it a matter or whether or not you guessed more takens than
-not-takens would occur.
+Since in reality it is hard to simulate the LRU policy on the hardware
+efficiently, Hot-Cold approximation can be used, and as it can be seen, the
+replacement policy is less accurate than true LRU replacement, but not enough
+that it wouldn't be worth the gain in efficiency.
 
-\section{Dynamic Predictors}
+\section{Write-through Policy}
 
-\label{sec:label}
+This model was plainly worse than the general Set-Associative model, except in
+one case. This isn't surprising, since we don't update the cache on a miss and
+we generally write to memory in a local area, if we miss once, we'll probably
+miss again soon. Although, we don't really lose a lot of our accuracy, write
+misses must not be a big contributor. And I will note, while it's not simulated
+in this program, a lot of write-misses will result in a lot of direct writes to
+memory, which will slow down a program in general.
 
-\subsection{1-Bit Bimodal Predictor}
-\label{subsec:label}
+\section{Next-line Prefetching}
 
-The 1-Bit Predictor was extremely easy to implement, since indexing the history
-table was a fairly simple algorithm to implement.
+This method seemed to be the best method we could get. It generally performed
+better than the general Set-Associative cache and frequently beat the accurate
+but inefficient Fully-Associative cache. The most optimal configuration of this
+type was the 16-way version which consistently performed better most other
+configurations, only being occasionally beaten out by the 16 KB direct cache
+oddly enough.
 
-\begin{lstlisting}[language=C++, caption=Giving our predictor a brain]
-// Table for 1-bit predictor
-int size = table_sizes[i];
-std::vector<bool> table(size, true);
-int correct_preds = 0;
-for (auto pred = preds.begin(); pred != preds.end(); pred++) {
-    int pred_loc = pred->pc % size;
-    if (pred->taken == table[pred_loc]) {
-        correct_preds++;
-    }
-    else {
-        table[pred_loc] = !table[pred_loc];
-    }
-}
-\end{lstlisting}
+\subsection{Prefetch on Miss}
 
-By keeping track of some kind of history associated with the program counter
-value, we began to see great improvements in accuracy. As we increased the table
-size the accuracy made pretty good gains in accuracy, too. However, with each
-table size increase we also saw diminishing returns, so at some point the
-benefits will cap off.
-
-\subsection{2-Bit Bimodal Predictor}
-\label{subsec:label}
-
-Now we increase the memory to 2 bits for each entry in the table and tells us
-not to change our minds if we're wrong just once. This changes
-our algorithm a little, but not greatly.
-
-\begin{lstlisting}[languag=C++, caption=A few more conditions, but the same idea]
-int size = table_sizes[i];
-std::vector<unsigned char> table(size, 3);
-int correct_preds = 0;
-for (auto pred = preds.begin(); pred != preds.end(); pred++) {
-    int pred_loc = pred->pc % size;
-    if (pred->taken == table[pred_loc] > 1) {
-        correct_preds++;
-        if (table[pred_loc] == 2) {
-            table[pred_loc] = 3;
-        }
-        else if (table[pred_loc] == 1) {
-            table[pred_loc] = 0;
-        }
-    }
-    else if (table[pred_loc] == 0 || table[pred_loc] == 2) {
-        table[pred_loc] = 1;
-    }
-    else if (table[pred_loc] == 1 || table[pred_loc] == 3) {
-        table[pred_loc] = 2;
-    }
-}
-\end{lstlisting}
-
-The results of this are pretty satisfying, for a small increase in memory we get
-better accuracy for every table size and the accuracy gains after each increase
-in size is more consistent and doesn't drop off as fast.
-
-\subsection{Gshare Predictor}
-\label{subsec:label}
-
-The idea with the Gshare Predictor was to not only store state assosciated with
-the program counter, but also remember the result of the last few branches we
-found to help us more smartly figure out where to update the state of our 2 bits
-from the 2-Bit Bimodal Predictor.
-
-\begin{lstlisting}[language=C++, caption=Thanks Greg]
-std::vector<unsigned char> table(2048, 3);
-unsigned short greg = 0; // Greg will keep track of things for me
-int correct_preds = 0;
-for (auto pred = preds.begin(); pred != preds.end(); pred++) {
-    int pred_loc = (pred->pc ^ greg) % 2048;
-    if (pred->taken == table[pred_loc] > 1) {
-        correct_preds++;
-        if (table[pred_loc] == 2) {
-            table[pred_loc] = 3;
-        }
-        else if (table[pred_loc] == 1) {
-            table[pred_loc] = 0;
-        }
-    }
-    else if (table[pred_loc] == 0 || table[pred_loc] == 2) {
-        table[pred_loc] = 1;
-    }
-    else if (table[pred_loc] == 1 || table[pred_loc] == 3) {
-        table[pred_loc] = 2;
-    }
-    greg = (greg << 1 | pred->taken) & r_mask;
-}
-\end{lstlisting}
-
-Oddly enough, the results from this predictor get worse as we have a larger
-local history. This may be because with a larger history the program is more
-liable to ``confuse'' itself. This means that because a smaller global register
-has fewer possible values it could take, which may translate to more consistent
-table indexing.
-
-\subsection{Tournament Predictor}
-\label{subsec:label}
- 
-This predictor is the unholy love child of the 2-Bit Bimodal predictor and the
-Gshare Predictor. Essentially it's trying to balance the losses from
-``confusing'' the history table from Gshare's methods, but also compensating for
-the diminishing returns from a large table history in the 2-Bit Bimodal model.
-It keeps track of which method to use via another history table like in the
-2-Bit model. The code is not shockingly different than what's already been
-shown, so it's not been recopied here.
-
-This predictor consistently beats the best results from both 2-Bit Bimodal and
-Gshare. This seems like the most accurate version, but I have trouble believing
-that managing 2 history tables and updating their state in a CPU doesn't inflict some
-kind of significant overhead, either in complexity or speed.
+Preftching only on a miss gave good results, generally better than the
+Set-Associative cache, but like with the write-on-miss Set-Associative cache,
+this version of a prefetching cache was still slightly less accurate.
 
 \end{document}

@@ -21,9 +21,6 @@
    (TeX-add-symbols
     "N"
     "Z")
-   (LaTeX-add-labels
-    "sec:label"
-    "subsec:label")
    (LaTeX-add-environments
     '("corollary" LaTeX-env-args ["argument"] 1)
     '("question" LaTeX-env-args ["argument"] 1)

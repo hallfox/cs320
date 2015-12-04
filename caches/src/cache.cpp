@@ -66,7 +66,7 @@ void HotColdSet::set_hot(int index) {
   int size = hot_cold.size();
   int start = 0, end = size;
   int loc;
-  for (loc = (start+end)/2; loc != start && loc != end; loc = (start+end)/2) {
+  for (loc = (start+end)/2; start+1 != end; loc = (start+end)/2) {
     if (loc < index) {
       start = loc;
       hot_cold[loc] = true;
@@ -75,6 +75,12 @@ void HotColdSet::set_hot(int index) {
       end = loc;
       hot_cold[loc] = false;
     }
+  }
+  if (loc < index) {
+    hot_cold[loc] = true;
+  }
+  else {
+    hot_cold[loc] = false;
   }
 }
 
