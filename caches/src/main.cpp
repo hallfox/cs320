@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
   unsigned int data;
   char op;
   int lines = 0;
-  Cache part_1[] = {
+  DirectCache part_1[] = {
     DirectCache(1),
     DirectCache(4),
     DirectCache(16),
@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
     Cache(16, 8),
     Cache(16, 16),
   };
-  Cache part_3[] = {
+  FullCache part_3[] = {
     FullCache(16),
     FullCache(16, CACHE_CONFIG_HOTCOLD),
   };
@@ -49,21 +49,27 @@ int main(int argc, char *argv[]) {
     Cache(16, 8, CACHE_CONFIG_PREFETCH_MISS),
     Cache(16, 16, CACHE_CONFIG_PREFETCH_MISS),
   };
-  Cache *tests[] = { part_1, part_2, part_3, part_4, part_5, part_6 };
+  std::vector<Cache*> tests = { part_1, part_2, part_3, part_4, part_5, part_6 };
+  int test_sizes[] = {4, 4, 2, 4, 4, 4};
   while (input_trace >> op >> std::hex >> data) {
-    // for (auto& t: tests) {
-      for (auto& c: part_3) {
-        c.put_addr(op, data);
+    for (int i = 0; i < 6; i++) {
+      for (int j = 0; j < test_sizes[i]; j++) {
+        tests[i][j].put_addr(op, data);
       }
-    // }
+    }
     lines++;
   }
   input_trace.close();
 
-    for (auto& c: part_3) {
-      std::cout << c.get_hits() << ", " << lines << "; ";
+  for (int i = 0; i < 6; i++) {
+    for (int j = 0; j < test_sizes[i]; j++) {
+      std::cout << tests[i][j].get_hits() << ", " << lines << "; ";
+      if (i == 2 && j == 0) {
+        std::cout << "\n";
+      }
     }
     std::cout << "\n";
+  }
 
   output.close();
 
